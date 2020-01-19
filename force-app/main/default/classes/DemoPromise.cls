@@ -1,7 +1,4 @@
 public with sharing class DemoPromise extends Promise {
-
-  public class DemoPromiseException extends exception {}
-
   Id accountId;
 
   public DemoPromise(Id accountId){
@@ -24,5 +21,4 @@ public with sharing class DemoPromise extends Promise {
     update acct;
     System.debug('Async Work Completed!');
   }
-
 }

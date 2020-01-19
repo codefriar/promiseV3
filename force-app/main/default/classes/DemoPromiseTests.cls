@@ -29,6 +29,24 @@ public with sharing class DemoPromiseTests {
   }
 
   @isTest
+  private static void thenTest(){
+    Account account = [SELECT Id FROM Account WHERE name = 'TestAccount' LIMIT 1];
+    Test.startTest();
+    DemoPromise dp = new DemoPromise(account.id);
+    dp.passthrough = (Integer) 0;
+    dp.then(new DemoPromise(account.id))
+      .then(new DemoPromise(account.id));
+    System.enqueueJob(dp);
+    Test.stopTest();
+
+    Account checkAccount = [SELECT ShippingStreet, billingStreet FROM Account WHERE id = :account.id LIMIT 1];
+    System.assertEquals(3, Integer.valueOf(checkAccount.shippingStreet), 
+      'Expected 3 instances of the queuable to have been run, each incrementing by 1');
+    System.assertEquals(3, Integer.valueOf(checkAccount.billingStreet), 
+      'Expected 3 instances of the queuable to have been run, each incrementing by 1');
+  }
+
+  @isTest
   private static void promiseListConstructor(){
     Account account = [SELECT Id FROM Account WHERE name = 'TestAccount' LIMIT 1];
     Test.startTest();
