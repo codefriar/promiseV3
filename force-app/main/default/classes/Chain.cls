@@ -1,8 +1,10 @@
 public class Chain implements Finalizer {
   Promise[] promises;
+  Object passthrough;
 
-  public Chain(Promise[] promises){
+  public Chain(Promise[] promises, Object passthrough){
     this.promises = promises;
+    this.passthrough = passthrough;
   }
 
   public void execute(FinalizerContext context){
@@ -15,6 +17,7 @@ public class Chain implements Finalizer {
         if(this.promises.size() > 0){
           Promise next = this.promises.remove(0);
           next.promises = this.promises;
+          next.passthrough = passthrough;
           System.enqueueJob(next);
         }
       }
