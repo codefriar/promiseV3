@@ -3,7 +3,6 @@ public with sharing class DemoPromise extends Promise {
   public class DemoPromiseException extends exception {}
 
   Id accountId;
-  @testvisible String state;
 
   public DemoPromise(Id accountId){
     this.accountId = accountId;
@@ -18,6 +17,10 @@ public with sharing class DemoPromise extends Promise {
     Account acct = [SELECT name, shippingStreet FROM Account WHERE id = :this.accountId];
     Integer x = Integer.valueOf(acct.shippingStreet);
     acct.shippingStreet = String.valueOf(x+1);
+    if(this.passthrough != null){
+      this.passthrough = 1 + (Integer) this.passthrough;
+      acct.billingStreet = String.valueOf(this.passthrough);
+    }
     update acct;
     System.debug('Async Work Completed!');
   }
