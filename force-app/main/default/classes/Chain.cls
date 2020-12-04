@@ -9,7 +9,7 @@ public class Chain implements Finalizer {
 
   public void execute(FinalizerContext context){
     Id parentQueueableJobId = context.getAsyncApexJobId();
-    switch on context.getAsyncApexJobResult() {
+    switch on context.getResult() {
       when SUCCESS {
         if(this.promises.size() > 0){
           Promise next = this.promises.remove(0);
@@ -20,7 +20,7 @@ public class Chain implements Finalizer {
       }
       when UNHANDLED_EXCEPTION {
         System.Debug('Parent Queueable (Job ID: ' + parentQueueableJobId + '): FAILED!');
-        System.Debug('Parent Queueable Exception: ' + context.getAsyncApexJobException().getMessage());
+        System.Debug('Parent Queueable Exception: ' + context.getException().getMessage());
       }
     }    
   }
